@@ -33,12 +33,19 @@ navigator.mediaDevices.getUserMedia(
 );
 
 function successCallback(stream) {
-  console.log('getUserMedia() got stream: ', stream);
   window.stream = stream;
   gumVideo.srcObject = stream;
+  var options = {mimeType: 'video/webm', bitsPerSecond: 100000};
+
+  var seconds = new Date().getTime() / 1000;
+  // setInterval
+  setInterval(function(){
+    // alert("Hello"); },
+    console.log('seconds', seconds)},
+  1000);
+
 
   // start
-  var options = {mimeType: 'video/webm', bitsPerSecond: 100000};
   recordedBlobs = [];
   mediaRecorder = new MediaRecorder(window.stream, options);
   mediaRecorder.ondataavailable = function(event) {
@@ -46,7 +53,7 @@ function successCallback(stream) {
       recordedBlobs.push(event.data);
     }
   }
-  mediaRecorder.start(10);
+  mediaRecorder.start(1);
 
   // PLAY
   setTimeout(function() {
@@ -65,9 +72,9 @@ function successCallback(stream) {
         recordedBlobs2.push(event.data);
       }
     }
-    mediaRecorder2.start(10);
+    mediaRecorder2.start(1);
     console.log('1st')
-  }, 2500);
+  }, 5000);
 
 
   // PLAY 2
@@ -76,10 +83,8 @@ function successCallback(stream) {
     mediaRecorder2.stop();
     // play
     var superBuffer2 = new Blob(recordedBlobs2, {type: 'video/webm'});
-    // console.log()
     recordedVideo.src = window.URL.createObjectURL(superBuffer2);
     console.log('2nd')
-  }, 5000);
-
+  }, 10000);
 
 }
