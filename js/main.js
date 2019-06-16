@@ -4,6 +4,10 @@ var mediaRecorder;
 var recordedBlobs;
 var sourceBuffer;
 
+
+var mediaRecorder2;
+var recordedBlobs2;
+
 var gumVideo = document.querySelector('video#gum');
 var recordedVideo = document.querySelector('video#recorded');
 
@@ -44,11 +48,38 @@ function successCallback(stream) {
   }
   mediaRecorder.start(10);
 
+  // PLAY
   setTimeout(function() {
     // stop
     mediaRecorder.stop();
     // play
     var superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
+    console.log('vid1', window.URL.createObjectURL(superBuffer))
     recordedVideo.src = window.URL.createObjectURL(superBuffer);
+
+    // start 2
+    recordedBlobs2 = [];
+    mediaRecorder2 = new MediaRecorder(window.stream, options);
+    mediaRecorder2.ondataavailable = function(event) {
+      if (event.data && event.data.size > 0) {
+        recordedBlobs2.push(event.data);
+      }
+    }
+    mediaRecorder2.start(10);
+    console.log('1st')
   }, 2500);
+
+
+  // PLAY 2
+  setTimeout(function() {
+    // stop
+    mediaRecorder2.stop();
+    // play
+    var superBuffer2 = new Blob(recordedBlobs2, {type: 'video/webm'});
+    // console.log()
+    recordedVideo.src = window.URL.createObjectURL(superBuffer2);
+    console.log('2nd')
+  }, 5000);
+
+
 }
