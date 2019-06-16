@@ -4,9 +4,14 @@ var mediaRecorder;
 var recordedBlobs;
 var sourceBuffer;
 
-
 var mediaRecorder2;
 var recordedBlobs2;
+
+var mediaRecorder3;
+var recordedBlobs3;
+
+var mediaRecorder4;
+var recordedBlobs4;
 
 var gumVideo = document.querySelector('video#gum');
 var recordedVideo = document.querySelector('video#recorded');
@@ -44,7 +49,6 @@ function successCallback(stream) {
     console.log('seconds', seconds)},
   1000);
 
-
   // start
   recordedBlobs = [];
   mediaRecorder = new MediaRecorder(window.stream, options);
@@ -55,11 +59,12 @@ function successCallback(stream) {
   }
   mediaRecorder.start(1);
 
+  // *************************** 1 ST **************************
   // PLAY
   setTimeout(function() {
-    // stop
+    // stop 1
     mediaRecorder.stop();
-    // play
+    // play 1
     var superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
     console.log('vid1', window.URL.createObjectURL(superBuffer))
     recordedVideo.src = window.URL.createObjectURL(superBuffer);
@@ -77,14 +82,56 @@ function successCallback(stream) {
   }, 5000);
 
 
-  // PLAY 2
+  // *************************** 2 ND **************************``
   setTimeout(function() {
-    // stop
+    // stop 2
     mediaRecorder2.stop();
-    // play
-    var superBuffer2 = new Blob(recordedBlobs2, {type: 'video/webm'});
-    recordedVideo.src = window.URL.createObjectURL(superBuffer2);
+    // play 2
+    var superBuffer = new Blob(recordedBlobs2, {type: 'video/webm'});
+    recordedVideo.src = window.URL.createObjectURL(superBuffer);
+    console.log('2nd')
+
+    // start 3
+    recordedBlobs3 = [];
+    mediaRecorder3 = new MediaRecorder(window.stream, options);
+    mediaRecorder3.ondataavailable = function(event) {
+      if (event.data && event.data.size > 0) {
+        recordedBlobs3.push(event.data);
+      }
+    }
+    mediaRecorder3.start(1);
     console.log('2nd')
   }, 10000);
+
+  // *************************** 3 RD **************************``
+  setTimeout(function() {
+    // stop 3
+    mediaRecorder3.stop();
+    // play 3
+    var superBuffer = new Blob(recordedBlobs3, {type: 'video/webm'});
+    recordedVideo.src = window.URL.createObjectURL(superBuffer);
+
+    // start 4
+    recordedBlobs4 = [];
+    mediaRecorder4 = new MediaRecorder(window.stream, options);
+    mediaRecorder4.ondataavailable = function(event) {
+      if (event.data && event.data.size > 0) {
+        recordedBlobs4.push(event.data);
+      }
+    }
+    mediaRecorder4.start(1);
+    console.log('3rd')
+  }, 15000);
+
+
+  // *************************** 4 TH **************************``
+  setTimeout(function() {
+    // stop 4
+    mediaRecorder4.stop();
+    // play 4
+    var superBuffer = new Blob(recordedBlobs4, {type: 'video/webm'});
+    recordedVideo.src = window.URL.createObjectURL(superBuffer);
+    console.log('4TH')
+  }, 20000);
 
 }
