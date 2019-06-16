@@ -52,11 +52,6 @@ var recordedVideo = document.querySelector('video#recorded');
 var recordButton = document.querySelector('button#record');
 var playButton = document.querySelector('button#play');
 var downloadButton = document.querySelector('button#download');
-recordButton.onclick = toggleRecording;
-playButton.onclick = play;
-downloadButton.onclick = download;
-
-
 
 var constraints = {
   audio: false,
@@ -70,22 +65,17 @@ navigator.mediaDevices.getUserMedia(
   errorCallback
 );
 
-
-
-
-
-
 function successCallback(stream) {
   console.log('getUserMedia() got stream: ', stream);
   window.stream = stream;
   gumVideo.srcObject = stream;
 
-  // startRecording();
-  //
-  // setTimeout(function() {
-  //   stopRecording();
-  //   play();
-  // }, 2500);
+  startRecording();
+
+  setTimeout(function() {
+    stopRecording();
+    play();
+  }, 2500);
 }
 
 function errorCallback(error) {
@@ -98,26 +88,6 @@ function handleSourceOpen(event) {
   console.log('Source buffer: ', sourceBuffer);
 }
 
-function handleDataAvailable(event) {
-  if (event.data && event.data.size > 0) {
-    recordedBlobs.push(event.data);
-  }
-}
-
-function handleStop(event) {
-  console.log('Recorder stopped: ', event);
-}
-
-function toggleRecording() {
-  if (recordButton.textContent === 'Start Recording') {
-    startRecording();
-  } else {
-    stopRecording();
-    recordButton.textContent = 'Start Recording';
-    playButton.disabled = false;
-    downloadButton.disabled = false;
-  }
-}
 
 // The nested try blocks will be simplified when Chrome 47 moves to Stable
 function startRecording() {
@@ -144,12 +114,12 @@ function startRecording() {
     }
   }
   // console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-  recordButton.textContent = 'Stop Recording';
-  playButton.disabled = true;
-  downloadButton.disabled = true;
-  mediaRecorder.onstop = handleStop;
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start(1); // collect 10ms of data
+  mediaRecorder.ondataavailable = function(event) {
+    if (event.data && event.data.size > 0) {
+      recordedBlobs.push(event.data);
+    }
+  }
+  mediaRecorder.start(10); // collect 10ms of data
   // console.log('MediaRecorder started', mediaRecorder);
   console.log('start recording')
 }
